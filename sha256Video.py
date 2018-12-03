@@ -24,17 +24,17 @@ bloco_hash_vid2 = ''
 bloco_controle = 0
 
 #abertura do arquivo
-arq = open("/home/hugo/Área de Trabalho/SHA256-Video/video05.mp4",'rb')
- 
-#Leitura dos bytes do arquivo de trás para frente para conseguir calcular o hash h0
+arq = open("/home/hugo/Área de Trabalho/SHA256-Video/video_03.mp4",'rb')
 
 # flag_termino -> Variavel de controle que vai diminuindo conforme o tamanho do arquivo de video
-flag_termino = tam_video1
-
+flag_termino = tam_video2
+ 
+#Leitura dos bytes do arquivo de trás para frente para conseguir calcular o hash h0
 while flag_termino > 0:
-        
-    if(flag_termino == tam_video1):
-        bloco_controle = tUlt_bloco_vid1
+    
+    #If especial para o primeiro bloco variável ( que situa-se no fim do arquivo)
+    if(flag_termino == tam_video2):
+        bloco_controle = tUlt_bloco_vid2
     else:
         bloco_controle = tam_bloco 
 
@@ -44,7 +44,6 @@ while flag_termino > 0:
     arq.seek(flag_termino - bloco_controle)
     bloco_data = arq.read(tam_bloco)
 
-    
     #Inicializa o objeto relacionado a biblioteca do pycrypto que tem os métodos necessários para calculo do SHA256
     obj_sha = SHA256.new()
 
@@ -52,13 +51,13 @@ while flag_termino > 0:
     obj_sha.update(bloco_data)
 
     #FAz o update do hash conforme percorre o arquivo 
-    if(bloco_hash_vid1):
-        obj_sha.update(bloco_hash_vid1)
+    if(bloco_hash_vid2):
+        obj_sha.update(bloco_hash_vid2)
     
-    bloco_hash_vid1 = obj_sha.digest()
+    bloco_hash_vid2 = obj_sha.digest()
     
-    #Percorre o arquivo
+    #Percorre o arquivo diminuindo o tamanho da flag_termino. QUando chegar em zero, significa que leu tudo
     flag_termino -= bloco_controle
 
 # Printa H0
-print(bytes.decode(hexlify(bloco_hash_vid1)))
+print("H0 ---->",bytes.decode(hexlify(bloco_hash_vid2)))
